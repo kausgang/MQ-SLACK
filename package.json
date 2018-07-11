@@ -1,0 +1,15 @@
+{
+  "name": "mq-slack",
+  "version": "1.0.0",
+  "description": "send mq queuemanager/queue status to slack incoming webhook",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kaustav Ganguli",
+  "license": "ISC",
+  "dependencies": {
+    "request": "latest",
+    "ssh2": "^0.6.1"
+  }
+}
