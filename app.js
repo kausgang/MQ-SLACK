@@ -21,10 +21,6 @@ hosts.forEach(hostname => {
 });
 
 
-
-
-
-
 function MQ_CALL(hostname,cmd){
 
     var result = '';
@@ -35,20 +31,15 @@ function MQ_CALL(hostname,cmd){
     conn.exec(cmd, function(err, stream) {
         if (err) throw err;
         stream.on('close', function(code, signal) {
-        // console.log('Stream :: close :: code: ' + code + ', signal: ' + signal);
+
         conn.end();
 
-
-
-
+        // SHOW THE MQ STATUS IN CONSOLE    
         console.log(result);
-
+        // SEND STATUS TO SLACK
         SLACK_CALL(result)
 
-
-
         }).on('data', function(data) {
-        // console.log('STDOUT: ' + data);
 
         result += data;
 
@@ -65,26 +56,17 @@ function MQ_CALL(hostname,cmd){
 
         }
     );
-
-
 }
-
-
-
-
-
-
 
 
 
 function SLACK_CALL(result){
 
     var payload = {"text":result}
-
+    // CONVERT THE JS OBJECT PAYLOAD TO STRING
     payload = JSON.stringify(payload);
 
     var headers = {"Content-type": "application/json"}
-
 
     //REMEMBER TO USE BODY:PAYLOAD ...header is redundant
     // https://stackoverflow.com/questions/6432693/post-data-with-request-module-on-node-js
