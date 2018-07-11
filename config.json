@@ -1,0 +1,12 @@
+{
+    "webhook":"https://hooks.slack.com/services/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",
+    "host":"9.51.171.61",
+    "port": "22",
+    "username": "kaustav",
+    "password": "Kolkata@1",
+    "commands":[
+
+        ". /home/kaustav/.profile;dspmqver",
+        ". /home/kaustav/.profile;dspmq"
+    ]
+}

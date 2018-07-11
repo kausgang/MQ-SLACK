@@ -1,55 +1,57 @@
 var request = require('request');
 var Client = require('ssh2').Client;
 
-var url = "https://hooks.slack.com/services/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";
+const connection_options = require('./config.json');
+
+const url = connection_options.webhook;
+const command = connection_options.commands;
 
 
-
-//READ THIS FROM CONFIGURATION FILE
-var connection_options = {
-    host:'9.51.171.61',
-    port: 22,
-    username: 'kaustav',
-    password: 'Kolkata@1'
-};
-
-
-
-
-//    COMMAND TO CHECK QM STATUS ....ADD NEW COMMAND TO GET DIFFERENT RESULT
-var cmd = '. /home/kaustav/.profile;dspmq'
-
-
-var result = '';
-
-var conn = new Client();
-conn.on('ready', function() {
-// console.log('Client :: ready');
-conn.exec(cmd, function(err, stream) {
-    if (err) throw err;
-    stream.on('close', function(code, signal) {
-    // console.log('Stream :: close :: code: ' + code + ', signal: ' + signal);
-    conn.end();
-
-
-
-
-    console.log(result);
-
-    SLACK_CALL(result)
-
-
-
-    }).on('data', function(data) {
-    // console.log('STDOUT: ' + data);
-
-    result += data;
-
-    }).stderr.on('data', function(data) {
-    console.log('STDERR: ' + data);
-    });
+// SEND EACH COMMAND IN MQ_CALL
+command.forEach(element => {
+    MQ_CALL(element)
+    
 });
-}).connect(connection_options);
+
+
+
+
+function MQ_CALL(cmd){
+
+    var result = '';
+
+    var conn = new Client();
+    conn.on('ready', function() {
+    // console.log('Client :: ready');
+    conn.exec(cmd, function(err, stream) {
+        if (err) throw err;
+        stream.on('close', function(code, signal) {
+        // console.log('Stream :: close :: code: ' + code + ', signal: ' + signal);
+        conn.end();
+
+
+
+
+        console.log(result);
+
+        SLACK_CALL(result)
+
+
+
+        }).on('data', function(data) {
+        // console.log('STDOUT: ' + data);
+
+        result += data;
+
+        }).stderr.on('data', function(data) {
+        console.log('STDERR: ' + data);
+        });
+    });
+    }).connect(connection_options);
+
+
+}
+
 
 
 
