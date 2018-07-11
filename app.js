@@ -4,19 +4,28 @@ var Client = require('ssh2').Client;
 const connection_options = require('./config.json');
 
 const url = connection_options.webhook;
+const hosts = connection_options.hosts;
+const port = connection_options.port;
+const username = connection_options.username;
+const password = connection_options.password;
 const command = connection_options.commands;
 
 
-// SEND EACH COMMAND IN MQ_CALL
-command.forEach(element => {
-    MQ_CALL(element)
+// FOR EACH HOST
+hosts.forEach(hostname => {
+    // SEND EACH COMMAND IN MQ_CALL
+    command.forEach(cmd => {
+        MQ_CALL(hostname,cmd)
     
+    });
 });
 
 
 
 
-function MQ_CALL(cmd){
+
+
+function MQ_CALL(hostname,cmd){
 
     var result = '';
 
@@ -47,7 +56,15 @@ function MQ_CALL(cmd){
         console.log('STDERR: ' + data);
         });
     });
-    }).connect(connection_options);
+    }).connect(
+        {
+            host: hostname,
+            port: port,
+            username: username,
+            password: password
+
+        }
+    );
 
 
 }
